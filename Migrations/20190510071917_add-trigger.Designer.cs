@@ -4,14 +4,16 @@ using Automation.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Automation.API.Migrations
 {
     [DbContext(typeof(AutoContext))]
-    partial class AutoContextModelSnapshot : ModelSnapshot
+    [Migration("20190510071917_add-trigger")]
+    partial class addtrigger
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,15 +27,13 @@ namespace Automation.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("MetaDataId");
+                    b.Property<string>("Field");
 
                     b.Property<int?>("TriggerId");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Value");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MetaDataId");
 
                     b.HasIndex("TriggerId");
 
@@ -46,36 +46,19 @@ namespace Automation.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("MetaDataId");
+                    b.Property<string>("Field");
 
                     b.Property<string>("Operator");
 
                     b.Property<int?>("TriggerId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("MetaDataId");
-
-                    b.HasIndex("TriggerId");
-
-                    b.ToTable("Condition");
-                });
-
-            modelBuilder.Entity("Automation.API.Models.MetaData", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Field");
-
-                    b.Property<string>("Type");
-
                     b.Property<string>("Value");
 
                     b.HasKey("Id");
 
-                    b.ToTable("MetaData");
+                    b.HasIndex("TriggerId");
+
+                    b.ToTable("Condition");
                 });
 
             modelBuilder.Entity("Automation.API.Models.Trigger", b =>
@@ -94,8 +77,6 @@ namespace Automation.API.Migrations
 
                     b.Property<int>("Position");
 
-                    b.Property<string>("Table");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
@@ -105,10 +86,6 @@ namespace Automation.API.Migrations
 
             modelBuilder.Entity("Automation.API.Models.Action", b =>
                 {
-                    b.HasOne("Automation.API.Models.MetaData", "MetaData")
-                        .WithMany()
-                        .HasForeignKey("MetaDataId");
-
                     b.HasOne("Automation.API.Models.Trigger")
                         .WithMany("Actions")
                         .HasForeignKey("TriggerId");
@@ -116,10 +93,6 @@ namespace Automation.API.Migrations
 
             modelBuilder.Entity("Automation.API.Models.Condition", b =>
                 {
-                    b.HasOne("Automation.API.Models.MetaData", "MetaData")
-                        .WithMany()
-                        .HasForeignKey("MetaDataId");
-
                     b.HasOne("Automation.API.Models.Trigger")
                         .WithMany("Conditions")
                         .HasForeignKey("TriggerId");
