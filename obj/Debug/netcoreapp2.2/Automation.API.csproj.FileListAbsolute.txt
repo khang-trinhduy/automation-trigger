@@ -1,0 +1,14 @@
+C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.API.deps.json
+C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.API.runtimeconfig.json
+C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.API.runtimeconfig.dev.json
+C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.API.dll
+C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.API.pdb
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.csprojAssemblyReference.cache
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.csproj.CoreCompileInputs.cache
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.RazorAssemblyInfo.cache
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.RazorAssemblyInfo.cs
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.AssemblyInfoInputs.cache
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.AssemblyInfo.cs
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.RazorTargetAssemblyInfo.cache
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.dll
+C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.pdb
