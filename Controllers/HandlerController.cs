@@ -15,7 +15,8 @@ namespace Automation.API.Controllers
         {
             _context = context;
         }
-        public async Task<ActionResult<Handler>> Get()
+        [HttpPost]
+        public async Task<ActionResult<Handler>> Post()
         {
             var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
                     .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
@@ -26,7 +27,8 @@ namespace Automation.API.Controllers
                 Handler handle = new Handler(help);
                 handle.ExecuteTrigger(t);
 
-            }return Ok();
+            }
+            return Ok();
         }
     }
 }

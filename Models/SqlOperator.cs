@@ -15,6 +15,7 @@ namespace Automation.API.Models
         public static readonly string AND = "AND";
         public static readonly string ANY = "ANY";
         public static readonly string EXISTS = "EXISTS";
+        public static readonly string NOTEXISTS = "NOT EXISTS";
         public static readonly string NOT = "NOT";
         public static readonly string ISNULL = "IS NULL";
         public static readonly string UNIQUE = "UNIQUE";

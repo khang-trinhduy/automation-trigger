@@ -79,7 +79,7 @@ namespace Automation.API.Models
                     }
                     return new List<string> { "UPDATE", "SET " + action2 };
                 case "delete":
-                    return new List<string> { "DELETE FROM" };
+                    return new List<string> { "DELETE FROM", " " };
                 default:
                     return null;
             }

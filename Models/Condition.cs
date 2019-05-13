@@ -9,7 +9,6 @@ namespace Automation.API.Models
         public string Threshold { get; set; }
         public string Type { get; set; }
         public MetaData MetaData { get; set; }
-
         public void SetMeta(MetaData meta) {
             MetaData = meta;
         }
@@ -39,13 +38,17 @@ namespace Automation.API.Models
             {
                 throw new InvalidCastException();
             }
+            if (GetOperator() == "")
+            {
+                return "";
+            }
             string result = "WHERE ";
             switch (Type.ToLower())
             {
-                case "string":
-                    result += MetaData.Field + GetOperator() + "'" +Threshold + "'";
+                case "str":
+                    result += MetaData.Field  + GetOperator() + "N'" +Threshold + "'";
                     break;
-                case "integer":
+                case "int":
                     if (Threshold.Contains("_"))
                     {
                         result += MetaData.Field + " " + Threshold.Split("_")[0] + " AND" + Threshold.Split("_")[1];

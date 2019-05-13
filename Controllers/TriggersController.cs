@@ -110,7 +110,7 @@ namespace Automation.API.Controllers
                 return BadRequest();
             }
 
-            var tmpCondition = await _context.Condition.FirstOrDefaultAsync(e => e.Type == condition.Type && e.Operator == condition.Operator);
+            var tmpCondition = await _context.Condition.FirstOrDefaultAsync(e => e.Type == condition.Type && e.Operator == condition.Operator && e.Threshold == condition.Threshold);
             if (tmpCondition == null)
             {
                 return BadRequest();
