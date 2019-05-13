@@ -51,12 +51,12 @@ namespace Automation.API.Models
                 case "int":
                     if (Threshold.Contains("_"))
                     {
-                        result += MetaData.Field + " " + Threshold.Split("_")[0] + " AND" + Threshold.Split("_")[1];
+                        result += MetaData.Field + " " + Convert.ToInt32(Threshold.Split("_")[0]) + " AND" + Convert.ToInt32(Threshold.Split("_")[1]);
                         break;
                     }
                     else
                     {
-                        result += MetaData.Field + " " + GetOperator() + " " + Threshold;
+                        result += MetaData.Field + " " + GetOperator() + " " + Convert.ToInt32(Threshold);
                         break;
                     }
                 default:
