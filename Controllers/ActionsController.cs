@@ -70,7 +70,35 @@ namespace Automation.API.Controllers
 
             return NoContent();
         }
+        //TODO  add method for insert metadata
+        [HttpPut("setmeta/{id}")]
+        public async Task<ActionResult<Models.Action>> SetMeta(int id,MetaData meta)
+        {
+            var action = await _context.Action.FindAsync(id);
+            if(action == null)
+            {
+                return BadRequest();
+            }
 
+            var tmpMeta = await _context.MetaData.FirstOrDefaultAsync(e => e.Field == meta.Field && e.Type == meta.Type);
+            if (tmpMeta == null)
+            {
+                return BadRequest();
+            }
+
+            action.SetMeta(tmpMeta);
+            _context.Entry(action).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return NoContent();
+        }
         // POST: api/Actions
         [HttpPost]
         public async Task<ActionResult<Models.Action>> PostAction(Models.Action action)

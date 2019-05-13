@@ -71,6 +71,79 @@ namespace Automation.API.Controllers
             return NoContent();
         }
 
+        [HttpPut("setaction/{id}")]
+        public async Task<ActionResult<Trigger>> SetAction(int id, Models.Action action)
+        {
+            var trigger = await _context.Trigger.FindAsync(id);
+            if (trigger == null)
+            {
+                return BadRequest();
+            }
+
+            var tmpAction = await _context.Action.FirstOrDefaultAsync(e => e.Type == action.Type && e.Value == action.Value);
+            if (tmpAction == null)
+            {
+                return BadRequest();
+            }
+
+            trigger.AddAction(tmpAction);
+            trigger.LastUpdated = DateTime.Now;
+            _context.Entry(trigger).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            return NoContent();
+
+        }
+
+        [HttpPut("setcondition/{id}")]
+        public async Task<ActionResult<Trigger>> SetCondition(int id, Condition condition)
+        {
+            var trigger = await _context.Trigger.FindAsync(id);
+            if (trigger == null)
+            {
+                return BadRequest();
+            }
+
+            var tmpCondition = await _context.Condition.FirstOrDefaultAsync(e => e.Type == condition.Type && e.Operator == condition.Operator);
+            if (tmpCondition == null)
+            {
+                return BadRequest();
+            }
+
+            trigger.AddCondition(tmpCondition);
+            trigger.LastUpdated = DateTime.Now;
+            _context.Entry(trigger).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            return NoContent();
+
+        }
+        //TODO test getquery, add metadata
+        [HttpGet("query/{id}")]
+        public async Task<ActionResult<string>> GetQuery(int id) 
+        {
+            var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
+                            .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
+            var trigger = triggers.FirstOrDefault(e => e.Id == id);
+            if (trigger == null)
+            {
+                return NotFound();
+            }
+
+            return trigger.GetQuery();
+        }
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Trigger>> DeleteTrigger(int id) {

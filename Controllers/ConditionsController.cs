@@ -69,6 +69,36 @@ namespace Automation.API.Controllers
             return NoContent();
         }
 
+        //TODO add method to insert metadata
+        [HttpPut("setmeta/{id}")]
+        public async Task<ActionResult<Condition>> SetMeta(int id, MetaData meta)
+        {
+            var condition = await _context.Condition.FindAsync(id);
+            if (condition == null)
+            {
+                return BadRequest();
+            }
+
+            var tmpMeta = await _context.MetaData.FirstOrDefaultAsync(e => e.Type == meta.Type && e.Field == meta.Field);
+            if (tmpMeta == null)
+            {
+                return BadRequest();
+            }
+
+            condition.SetMeta(tmpMeta);
+            _context.Entry(condition).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            
+            return NoContent();
+        }
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<ActionResult<Condition>> DeleteCondition(int id) {
