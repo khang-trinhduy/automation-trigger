@@ -16,7 +16,7 @@ namespace Automation.API.Controllers
             _context = context;
         }
         [HttpPost]
-        public async Task<ActionResult<Handler>> Post()
+        public async Task<ActionResult<Handler>> Execute()
         {
             var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
                     .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
@@ -31,26 +31,27 @@ namespace Automation.API.Controllers
             return Ok();
         }
 
-        [HttpGet("/validate")]
-        public async Task<ActionResult<Handler>> ValidateConnection([FromQuery] string server, [FromQuery]string database, [FromQuery] bool trustedConnection)
+        [HttpGet("validate")]
+        public async Task<ActionResult<Handler>> ValidateConnection([FromQuery] string sv, [FromQuery]string db, [FromQuery] bool trusted, [FromQuery] string userId, [FromQuery] string pwd)
         {
-            SqlHelper helper = new SqlHelper(server, database);
-            if (helper.GetConnection())
+            if (trusted)
             {
-                return Ok();
+                SqlHelper helper = new SqlHelper(sv, db);
+                if (helper.GetConnection())
+                {
+                    return Ok();
+                }
+            }
+            else
+            {
+                SqlHelper helper = new SqlHelper(sv, db, userId, pwd);
+                if (helper.GetConnection())
+                {
+                    return Ok();
+                }
             }
             return NotFound();
         }
 
-        [HttpGet("/validate")]
-        public async Task<ActionResult<Handler>> ValidateConnection([FromQuery] string server, [FromQuery]string database, [FromQuery] string userId, [FromQuery] string pwd)
-        {
-            SqlHelper helper = new SqlHelper(server, database);
-            if (helper.GetConnection())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
     }
 }
