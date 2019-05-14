@@ -9,11 +9,13 @@ namespace Automation.API.Models
         public string Threshold { get; set; }
         public string Type { get; set; }
         public MetaData MetaData { get; set; }
-        public void SetMeta(MetaData meta) {
+        public void SetMeta(MetaData meta)
+        {
             MetaData = meta;
         }
 
-        public string GetOperator() {
+        public string GetOperator()
+        {
             switch (Operator.ToLower())
             {
                 case "greater":
@@ -33,7 +35,8 @@ namespace Automation.API.Models
             }
         }
 
-        public string GetQuery() {
+        public string GetQuery()
+        {
             if (Type == "" || Type != MetaData.Type)
             {
                 throw new InvalidCastException();
@@ -46,7 +49,7 @@ namespace Automation.API.Models
             switch (Type.ToLower())
             {
                 case "str":
-                    result += MetaData.Field  + GetOperator() + "N'" +Threshold + "'";
+                    result += MetaData.Field + GetOperator() + "N'" + Threshold + "'";
                     break;
                 case "int":
                     if (Threshold.Contains("_"))

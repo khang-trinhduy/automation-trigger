@@ -30,5 +30,27 @@ namespace Automation.API.Controllers
             }
             return Ok();
         }
+
+        [HttpGet("/validate")]
+        public async Task<ActionResult<Handler>> ValidateConnection([FromQuery] string server, [FromQuery]string database, [FromQuery] bool trustedConnection)
+        {
+            SqlHelper helper = new SqlHelper(server, database);
+            if (helper.GetConnection())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpGet("/validate")]
+        public async Task<ActionResult<Handler>> ValidateConnection([FromQuery] string server, [FromQuery]string database, [FromQuery] string userId, [FromQuery] string pwd)
+        {
+            SqlHelper helper = new SqlHelper(server, database);
+            if (helper.GetConnection())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }

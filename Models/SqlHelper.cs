@@ -31,7 +31,21 @@ namespace Automation.API.Models
             PassWord = pw;
         }
 
-        public IEnumerable<List<Object>> ExecuteReader(string command)
+        public bool GetConnection()
+        {
+            try
+            {
+                Connection();
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        private SqlConnection Connection()
         {
             if (Server == null || Database == null)
             {
@@ -40,13 +54,19 @@ namespace Automation.API.Models
             SqlConnection conn = new SqlConnection();
             if (TrustedConnection)
             {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";Trusted_connection=yes");
+                conn = new SqlConnection(@"Data Source=" + Server + "; Initial Catalog=" + Database + ";Trusted_connection=yes");
             }
             else
             {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";User Id=" + UserId + ";Password=" + PassWord );
+                conn = new SqlConnection(@"Data Source=" + Server + "; Initial Catalog=" + Database + ";User Id=" + UserId + ";Password=" + PassWord);
             }
             conn.Open();
+            return conn;
+        }
+
+        public IEnumerable<List<Object>> ExecuteReader(string command)
+        {
+            SqlConnection conn = Connection();
             SqlCommand cm = new SqlCommand(command, conn);
             using (var reader = cm.ExecuteReader())
             {
@@ -54,96 +74,55 @@ namespace Automation.API.Models
                 foreach (IDataRecord record in reader as IEnumerable)
                     yield return indices.Select(i => record[i]).ToList();
             }
-        
-        }
 
+        }
         public string ExecuteWriter(string command)
         {
-            if (Server == null || Database == null)
-            {
-                throw new NullReferenceException(nameof(SqlHelper));
-            }
-            SqlConnection conn = new SqlConnection();
-            if (TrustedConnection)
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";Trusted_connection=yes");
-            }
-            else
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";User Id=" + UserId + ";Password=" + PassWord );
-            }
-            conn.Open();
+            SqlConnection conn = Connection();
             try
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.InsertCommand = new SqlCommand(command, conn);
                 adapter.InsertCommand.ExecuteNonQuery();
-                
             }
             catch (System.Exception)
             {
-                
+
                 throw new Exception(nameof(command));
             }
             return "insert successful";
         }
-    
+
         public string ExecuteUpdate(string command)
         {
-            if (Server == null || Database == null)
-            {
-                throw new NullReferenceException(nameof(SqlHelper));
-            }
-            SqlConnection conn = new SqlConnection();
-            if (TrustedConnection)
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";Trusted_connection=yes");
-            }
-            else
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";User Id=" + UserId + ";Password=" + PassWord );
-            }
-            conn.Open();
+            SqlConnection conn = Connection();
             try
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.UpdateCommand = new SqlCommand(command, conn);
                 adapter.UpdateCommand.ExecuteNonQuery();
-                
+
             }
             catch (System.Exception)
             {
-                
+
                 throw new Exception(nameof(command));
             }
             return "update successful";
         }
         public string ExecuteDelete(string command)
         {
-            if (Server == null || Database == null)
-            {
-                throw new NullReferenceException(nameof(SqlHelper));
-            }
-            SqlConnection conn = new SqlConnection();
-            if (TrustedConnection)
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";Trusted_connection=yes");
-            }
-            else
-            {
-                conn = new SqlConnection(@"Data Source=" + Server+ "; Initial Catalog=" + Database + ";User Id=" + UserId + ";Password=" + PassWord );
-            }
-            conn.Open();
+            SqlConnection conn = Connection();
             try
             {
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.DeleteCommand = new SqlCommand(command, conn);
                 adapter.DeleteCommand.ExecuteNonQuery();
-                
+
             }
             catch (System.Exception)
             {
-                
+
                 throw new Exception(nameof(command));
             }
             return "delete successful";
