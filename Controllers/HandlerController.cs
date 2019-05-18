@@ -3,6 +3,12 @@ using Automation.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Crm.Context;
+using Microsoft.EntityFrameworkCore.Internal;
+using Crm;
+using System.Collections.Generic;
+using System;
+using System.Linq.Expressions;
 
 namespace Automation.API.Controllers
 {
@@ -11,23 +17,22 @@ namespace Automation.API.Controllers
     public class HandlerController : ControllerBase
     {
         private readonly AutoContext _context;
-        public HandlerController(AutoContext context)
+        private CrmContext _crmContext;
+        public HandlerController(AutoContext context, CrmContext crmContext)
         {
+            string conn = @"Server=khang-pc\\sqlexpress;Database=DataContext;Trusted_connection=True;";
             _context = context;
+            using (_crmContext = new CrmContext()) {
+                _crmContext.Connection = conn;
+            };
         }
         [HttpPost]
         public async Task<ActionResult<Handler>> Execute()
         {
             var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
-                    .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
+                    .Include(t => t.All).ThenInclude(c => c.MetaData)
+                    .Include(t => t.Any).ThenInclude(c => c.MetaData).ToListAsync();
             var sortedTriggers = triggers.Where(t => t.IsNotActive == false).OrderBy(t => t.Position).ToList();
-            SqlHelper help = new SqlHelper("khang-pc\\sqlexpress", "DataContext", true);
-            foreach (var t in sortedTriggers)
-            {
-                Handler handle = new Handler(help);
-                handle.ExecuteTrigger(t);
-
-            }
             return Ok();
         }
 
@@ -36,19 +41,12 @@ namespace Automation.API.Controllers
         {
             if (trusted)
             {
-                SqlHelper helper = new SqlHelper(sv, db);
-                if (helper.GetConnection())
-                {
-                    return Ok();
-                }
+                string conn = @"Server=" + sv + ";Database=" + db + ";Trusted_Connection=True;";
+                
             }
             else
             {
-                SqlHelper helper = new SqlHelper(sv, db, userId, pwd);
-                if (helper.GetConnection())
-                {
-                    return Ok();
-                }
+                string conn = @"Server=" + sv + ";Database=" + db + ";User id=" + userId +";password=" + pwd;
             }
             return NotFound();
         }

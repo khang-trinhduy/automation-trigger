@@ -70,7 +70,6 @@ namespace Automation.API.Controllers
             }
             return NoContent();
         }
-
         [HttpPut("setaction/{id}")]
         public async Task<ActionResult<Trigger>> SetAction(int id, Models.Action action)
         {
@@ -116,7 +115,7 @@ namespace Automation.API.Controllers
                 return BadRequest();
             }
 
-            trigger.AddCondition(tmpCondition);
+            // trigger.AddCondition(tmpCondition);
             trigger.LastUpdated = DateTime.Now;
             _context.Entry(trigger).State = EntityState.Modified;
             try
@@ -131,19 +130,19 @@ namespace Automation.API.Controllers
 
         }
         //TODO test getquery, add metadata
-        [HttpGet("query/{id}")]
-        public async Task<ActionResult<string>> GetQuery(int id) 
-        {
-            var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
-                            .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
-            var trigger = triggers.FirstOrDefault(e => e.Id == id);
-            if (trigger == null)
-            {
-                return NotFound();
-            }
+        // [HttpGet("query/{id}")]
+        // public async Task<ActionResult<string>> GetQuery(int id) 
+        // {
+        //     var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
+        //                     .Include(t => t.Conditions).ThenInclude(c => c.MetaData).ToListAsync();
+        //     var trigger = triggers.FirstOrDefault(e => e.Id == id);
+        //     if (trigger == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            return trigger.GetQuery();
-        }
+        //     return trigger.GetQuery();
+        // }
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Trigger>> DeleteTrigger(int id) {

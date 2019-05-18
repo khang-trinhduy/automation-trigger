@@ -12,6 +12,3 @@ C:\Users\trinh\source\WTF\API\Automation.API\bin\Debug\netcoreapp2.2\Automation.
 C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.RazorTargetAssemblyInfo.cache
 C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.dll
 C:\Users\trinh\source\WTF\API\Automation.API\obj\Debug\netcoreapp2.2\Automation.API.pdb
-c:\Users\trinh\source\WTF\API\automation.api\bin\Debug\netcoreapp2.2\appsettings.Development.json
-c:\Users\trinh\source\WTF\API\automation.api\bin\Debug\netcoreapp2.2\appsettings.json
-c:\Users\trinh\source\WTF\API\automation.api\bin\Debug\netcoreapp2.2\Properties\launchSettings.json

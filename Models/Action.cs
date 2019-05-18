@@ -49,7 +49,7 @@ namespace Automation.API.Models
                     var type = MetaData.Type.Split("_");
                     var value = "";
                     int count = 0;
-                    //TODO check if values have valid type (int, str, date)
+                    //TODO multiple actions
                     foreach (var item in Value.Split("_"))
                     {
                         if (!HaveValidType("int", item))
@@ -72,7 +72,7 @@ namespace Automation.API.Models
                     {
                         return null;
                     }
-                    //TODO check if values have valid type (int, str, date)
+                    //TODO multiple actions
                     var action2 = "";
                     string[] values = Value.Split("_");
                     string[] metas = MetaData.Field.Split("_");

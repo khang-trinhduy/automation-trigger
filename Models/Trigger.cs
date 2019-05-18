@@ -14,30 +14,31 @@ namespace Automation.API.Models
         public DateTime Created { get; set; }
         public DateTime LastUpdated { get; set; }
         public List<Action> Actions { get; set; }
-        public List<Condition> Conditions { get; set; }
+        public List<Condition> All { get; set; }
+        public List<Condition> Any {get; set;}
 
-        public string GetQuery()
-        {
-            if (Actions == null || Conditions == null)
-            {
-                throw new NullReferenceException();
-            }
-            string query = "";
-            List<string> ac = new List<string>();
-            foreach (var action in Actions)
-            {
-                List<string> actionQueries = action.GetActionQuery();
-                if (actionQueries.Count == 2)
-                {
-                    query += string.Join(" " + Table + " ", actionQueries);
-                }
-            }
-            foreach (var condition in Conditions)
-            {
-                query += "\n" + condition.GetQuery();
-            }
-            return query;
-        }
+        // public string GetQuery()
+        // {
+        //     if (Actions == null || Conditions == null)
+        //     {
+        //         throw new NullReferenceException();
+        //     }
+        //     string query = "";
+        //     List<string> ac = new List<string>();
+        //     foreach (var action in Actions)
+        //     {
+        //         List<string> actionQueries = action.GetActionQuery();
+        //         if (actionQueries.Count == 2)
+        //         {
+        //             query += string.Join(" " + Table + " ", actionQueries);
+        //         }
+        //     }
+        //     foreach (var condition in Conditions)
+        //     {
+        //         query += "\n" + condition.GetQuery();
+        //     }
+        //     return query;
+        // }
 
         public void AddAction(Action action)
         {
@@ -48,23 +49,30 @@ namespace Automation.API.Models
             }
             Actions.Add(action);
         }
-        public void AddCondition(Condition condition)
-        {
-            if (Conditions == null)
-            {
-                Conditions = new List<Condition>();
+        // public void AddCondition(Condition condition)
+        // {
+        //     if (Conditions == null)
+        //     {
+        //         Conditions = new List<Condition>();
 
-            }
-            Conditions.Add(condition);
-        }
+        //     }
+        //     foreach (var c in Conditions)
+        //     {
+        //         //NOTE condition on same table
+        //         if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+        //         {
+        //             Conditions.Add(condition);
+        //         }   
+        //     }
+        // }
 
-        public string GetType()
-        {
-            if (Actions == null || Conditions == null)
-            {
-                throw new NullReferenceException();
-            }
-            return Actions[0].Type;
-        }
+        // public string GetType()
+        // {
+        //     if (Actions == null || Conditions == null)
+        //     {
+        //         throw new NullReferenceException();
+        //     }
+        //     return Actions[0].Type;
+        // }
     }
 }
