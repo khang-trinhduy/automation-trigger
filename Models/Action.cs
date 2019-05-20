@@ -1,4 +1,4 @@
-using System;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace Automation.API.Models
@@ -35,6 +35,12 @@ namespace Automation.API.Models
 
             }
             return false;
+        }
+
+        public bool SetValue()
+        {
+            System.Type type = System.Type.GetType(MetaData.Table);
+            typeof(type).GetProperty(MetaData.Field).SetValue();
         }
 
         public List<string> GetActionQuery()
@@ -88,7 +94,6 @@ namespace Automation.API.Models
                                     throw new InvalidCastException(nameof(Int32));
                                 }
                                 action2 += metas[i] + "=" + values[i] + ",";
-
                             }
                             else
                             {

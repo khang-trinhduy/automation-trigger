@@ -2,7 +2,7 @@ namespace Automation.API.Models
 {
     public class SqlOperator
     {
-        public static readonly string EQUAL = "=";
+        public static readonly string EQUAL = "==";
         public static readonly string GREATER = ">";
         public static readonly string LESS = "<";
         public static readonly string GREATEREQUAL = ">=";

@@ -20,11 +20,8 @@ namespace Automation.API.Controllers
         private CrmContext _crmContext;
         public HandlerController(AutoContext context, CrmContext crmContext)
         {
-            string conn = @"Server=khang-pc\\sqlexpress;Database=DataContext;Trusted_connection=True;";
             _context = context;
-            using (_crmContext = new CrmContext()) {
-                _crmContext.Connection = conn;
-            };
+            _crmContext = crmContext;
         }
         [HttpPost]
         public async Task<ActionResult<Handler>> Execute()
@@ -33,6 +30,12 @@ namespace Automation.API.Controllers
                     .Include(t => t.All).ThenInclude(c => c.MetaData)
                     .Include(t => t.Any).ThenInclude(c => c.MetaData).ToListAsync();
             var sortedTriggers = triggers.Where(t => t.IsNotActive == false).OrderBy(t => t.Position).ToList();
+            foreach (var t in sortedTriggers)
+            {
+                //TODO call linq expression on trigger.cs
+                string expression = t.GetExpression();
+            }
+            var contact = _crmContext.Contact.ToList();
             return Ok();
         }
 
@@ -50,6 +53,8 @@ namespace Automation.API.Controllers
             }
             return NotFound();
         }
+
+        
 
     }
 }

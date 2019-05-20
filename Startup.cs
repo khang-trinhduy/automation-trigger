@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Automation.API.Models;
+using Crm.Context;
 
 namespace Automation.API
 {
@@ -31,6 +32,8 @@ namespace Automation.API
 
             services.AddDbContext<AutoContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AutoContext")));
+            services.AddDbContext<CrmContext>(options => 
+                    options.UseSqlServer(Configuration.GetConnectionString("CrmContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

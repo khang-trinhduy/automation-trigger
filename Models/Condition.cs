@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reflection;
+using Crm;
 
 namespace Automation.API.Models
 {
@@ -33,6 +38,16 @@ namespace Automation.API.Models
                 default:
                     return "";
             }
+        }
+
+        public string GetLinqExpression(int i)
+        {
+            if(MetaData == null)
+            {
+                throw new NullReferenceException(nameof(MetaData));
+            }
+            return MetaData.Field + " " + GetOperator() + " @" + i.ToString();
+            
         }
 
         public string GetQuery()

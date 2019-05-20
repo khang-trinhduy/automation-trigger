@@ -7,7 +7,7 @@ namespace Automation.API.Models
 {
     public class LinqExpression<T>
     {
-        public Func<T, bool> GetDynamicQueryWithExpresionTrees(string propertyName, string val, string op)
+        public Expression<Func<T, bool>> GetDynamicQueryWithExpresionTrees(string propertyName, string val, string op)
         {
             //x =>
             var param = Expression.Parameter(typeof(T), "x");
@@ -38,7 +38,7 @@ namespace Automation.API.Models
             }
             //x => x.LastName == "Curry"
             var final = Expression.Lambda<Func<T, bool>>(body: body, parameters: param);
-            return final.Compile();
+            return final;
         }
 
         private static UnaryExpression GetValueExpression(string propertyName, string val, ParameterExpression param)

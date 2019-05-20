@@ -10,16 +10,15 @@ namespace Crm.Context
 {
     public class CrmContext : DbContext
     {
-        public string Connection { get; set; }
         public DbSet<Contact> Contact { get; set; }
         public DbSet<Campaign> Campaign { get; set; }
-        public CrmContext()
-        {
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            options.UseSqlServer(Connection);    
-        }
+
+        public CrmContext(DbContextOptions options) : base(options)
+        {}
+        // protected override void OnConfiguring(DbContextOptionsBuilder options)
+        // {
+        //     options.UseSqlServer(@"Server=khang-pc\\sqlexpress;Database=DataContext;Trusted_connection=True;");    
+        // }
         
     }
 

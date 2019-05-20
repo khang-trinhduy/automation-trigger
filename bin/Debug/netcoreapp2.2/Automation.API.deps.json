@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "9730342b7b575aaeb702fae13ca2a10b3cc123ef"
+    "signature": "b4d337f33fdc0afa6e375393182bfbd6aaaee391"
   },
   "compilationOptions": {
     "defines": [
@@ -27,7 +27,8 @@
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.3"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.3",
+          "System.Linq.Dynamic.Core": "1.0.14"
         },
         "runtime": {
           "Automation.API.dll": {}
@@ -326,6 +327,17 @@
         },
         "compile": {
           "lib/netstandard1.0/System.Composition.TypedParts.dll": {}
+        }
+      },
+      "System.Linq.Dynamic.Core/1.0.14": {
+        "runtime": {
+          "lib/netcoreapp2.1/System.Linq.Dynamic.Core.dll": {
+            "assemblyVersion": "1.0.14.0",
+            "fileVersion": "1.0.14.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp2.1/System.Linq.Dynamic.Core.dll": {}
         }
       },
       "System.Linq.Parallel/4.3.0": {
@@ -3662,6 +3674,13 @@
       "sha512": "sha512-0Zae/FtzeFgDBBuILeIbC/T9HMYbW4olAmi8XqqAGosSOWvXfiQLfARZEhiGd0LVXaYgXr0NhxiU1LldRP1fpQ==",
       "path": "system.composition.typedparts/1.0.31",
       "hashPath": "system.composition.typedparts.1.0.31.nupkg.sha512"
+    },
+    "System.Linq.Dynamic.Core/1.0.14": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8FfiNpUjkdrB+4Z5PG3jrQLiuhI54Gpa7ZycLYOLcR2SGjmsGUCZmNhMHjl0amqPG+/k28iPQgU2q14RA1Q9pQ==",
+      "path": "system.linq.dynamic.core/1.0.14",
+      "hashPath": "system.linq.dynamic.core.1.0.14.nupkg.sha512"
     },
     "System.Linq.Parallel/4.3.0": {
       "type": "package",

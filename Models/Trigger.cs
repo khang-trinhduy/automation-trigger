@@ -17,29 +17,39 @@ namespace Automation.API.Models
         public List<Condition> All { get; set; }
         public List<Condition> Any {get; set;}
 
-        // public string GetQuery()
-        // {
-        //     if (Actions == null || Conditions == null)
-        //     {
-        //         throw new NullReferenceException();
-        //     }
-        //     string query = "";
-        //     List<string> ac = new List<string>();
-        //     foreach (var action in Actions)
-        //     {
-        //         List<string> actionQueries = action.GetActionQuery();
-        //         if (actionQueries.Count == 2)
-        //         {
-        //             query += string.Join(" " + Table + " ", actionQueries);
-        //         }
-        //     }
-        //     foreach (var condition in Conditions)
-        //     {
-        //         query += "\n" + condition.GetQuery();
-        //     }
-        //     return query;
-        // }
-
+        public string GetExpression()
+        {
+            if (All == null || Any == null)
+            {
+                throw new NullReferenceException(nameof(Condition));
+            }
+            List<string> all = new List<string>();
+            List<string> any = new List<string>();
+            int count = 0;
+            foreach (var c in All)
+            {
+                //TODO get linq expression
+                all.Add(c.GetLinqExpression(count));
+                count++;
+            }
+            count = 0;
+            //TODO append All linqexp to one condition
+            foreach (var c in Any)
+            {
+                //TODO get Any linq expression
+                any.Add(c.GetLinqExpression(count));
+                count++;
+            }
+            string exp = "(" + String.Join("and", all) + ")";
+            if (any != null && any.Count >= 1)
+            {
+                exp += " or " + "(" + String.Join("or", any) + ")";
+            }
+            return exp;
+            //TODO append Any linqexp to one condition
+            //TODO merge All && Any into one linqexp
+            //TODO return expression
+        }
         public void AddAction(Action action)
         {
             if (Actions == null)
@@ -49,30 +59,38 @@ namespace Automation.API.Models
             }
             Actions.Add(action);
         }
-        // public void AddCondition(Condition condition)
-        // {
-        //     if (Conditions == null)
-        //     {
-        //         Conditions = new List<Condition>();
+        public void AddAll(Condition condition)
+        {
+            if (All == null)
+            {
+                All = new List<Condition>();
 
-        //     }
-        //     foreach (var c in Conditions)
-        //     {
-        //         //NOTE condition on same table
-        //         if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
-        //         {
-        //             Conditions.Add(condition);
-        //         }   
-        //     }
-        // }
+            }
+            foreach (var c in All)
+            {
+                //NOTE condition on same table
+                if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+                {
+                    All.Add(condition);
+                }   
+            }
+        }
+        public void AddAny(Condition condition)
+        {
+            if (Any == null)
+            {
+                Any = new List<Condition>();
 
-        // public string GetType()
-        // {
-        //     if (Actions == null || Conditions == null)
-        //     {
-        //         throw new NullReferenceException();
-        //     }
-        //     return Actions[0].Type;
-        // }
+            }
+            foreach (var c in Any)
+            {
+                //NOTE condition on same table
+                if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+                {
+                    Any.Add(condition);
+                }   
+            }
+        }
+        
     }
 }
