@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Crm;
 using System.Collections.Generic;
 using System;
-using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
+using System.Reflection;
 
 namespace Automation.API.Controllers
 {
@@ -34,8 +35,48 @@ namespace Automation.API.Controllers
             {
                 //TODO call linq expression on trigger.cs
                 string expression = t.GetExpression();
+                if (t.Table.ToLower() == "contact")
+                {
+                    var contact = _crmContext.Contact.Where(expression).First();
+                    Type contactType = contact.GetType();
+                    if (contactType != null)
+                    {
+                        foreach (var action in t.Actions)
+                        {
+                            if (action.Type.ToLower() == "update")
+                            {
+                                if (action.MetaData == null)
+                                {
+                                    continue;
+                                }
+                                switch (action.Type.ToLower())
+                                {
+                                    case "update":
+                                        foreach (var prop in contactType.GetProperties())
+                                        {
+                                            if (prop.Name == action.MetaData.Field)
+                                            {
+                                                FieldInfo fieldInfo = contactType.GetFieldInfo(prop.Name);
+                                                fieldInfo.SetValue(null, action.Value);
+                                                break;
+                                            }
+                                            else
+                                                continue;
+                                        }
+                                        break;
+                                }
+                                
+                            }
+                            else if(action.Type.ToLower() == "delete")
+                            {
+                                //TODO delete action
+                            }
+                        }
+                        //TODO do action depend on prop, val
+                    }
+                }
             }
-            var contact = _crmContext.Contact.ToList();
+            
             return Ok();
         }
 

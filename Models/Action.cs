@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Collections.Generic;
+using System;
 
 namespace Automation.API.Models
 {
@@ -37,10 +38,25 @@ namespace Automation.API.Models
             return false;
         }
 
-        public bool SetValue()
+        public bool Execute()
         {
-            System.Type type = System.Type.GetType(MetaData.Table);
-            typeof(type).GetProperty(MetaData.Field).SetValue();
+            Assembly asl = Assembly.GetExecutingAssembly();
+            Type [] assemblyTypes = asl.GetTypes();
+            foreach (var t in assemblyTypes)
+            {
+                if (t.Name == MetaData.Table)
+                {
+                    foreach (var prop in t.GetProperties())
+                    {
+                        if (prop.Name == MetaData.Field)
+                        {
+                            prop.SetValue(null, Value);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public List<string> GetActionQuery()
