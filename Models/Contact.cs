@@ -9,7 +9,8 @@ namespace Crm
         public int Age { get; set; }
         public string PhoneNumber { get; set; }
         public Campaign Campaign { get; set; }
+        
         [ForeignKey("Campaign")]
-        public int CampaignId { get; set; }
+        public int? CampaignId { get; set; }
     }
 }

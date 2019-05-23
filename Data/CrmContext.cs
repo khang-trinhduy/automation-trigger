@@ -19,7 +19,6 @@ namespace Crm.Context
         // {
         //     options.UseSqlServer(@"Server=khang-pc\\sqlexpress;Database=DataContext;Trusted_connection=True;");    
         // }
-        
     }
 
 }

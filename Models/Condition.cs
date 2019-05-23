@@ -14,11 +14,11 @@ namespace Automation.API.Models
         public string Threshold { get; set; }
         public string Type { get; set; }
         public MetaData MetaData { get; set; }
+
         public void SetMeta(MetaData meta)
         {
             MetaData = meta;
         }
-
         public string GetOperator()
         {
             switch (Operator.ToLower())
@@ -39,13 +39,17 @@ namespace Automation.API.Models
                     return "";
             }
         }
-
         public string GetLinqExpression(int i)
         {
             if(MetaData == null)
             {
                 throw new NullReferenceException(nameof(MetaData));
             }
+            //TODO check if null for condition type of object
+            // if (Type == "obj")
+            // {
+            //     return MetaData.Field + " " + SqlOperator.DIF + " @" + i.ToString();
+            // }
             return MetaData.Field + " " + GetOperator() + " @" + i.ToString();
             
         }

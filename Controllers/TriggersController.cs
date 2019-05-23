@@ -101,7 +101,7 @@ namespace Automation.API.Controllers
         }
 
         [HttpPut("setcondition/{id}")]
-        public async Task<ActionResult<Trigger>> SetCondition(int id, Condition condition)
+        public async Task<ActionResult<Trigger>> SetCondition(int id, Condition condition, [FromQuery] bool all = true)
         {
             var trigger = await _context.Trigger.FindAsync(id);
             if (trigger == null)
@@ -116,6 +116,14 @@ namespace Automation.API.Controllers
             }
 
             // trigger.AddCondition(tmpCondition);
+            if (all)
+            {
+                trigger.AddAll(tmpCondition);
+            }
+            else
+            {
+                trigger.AddAny(tmpCondition);
+            }
             trigger.LastUpdated = DateTime.Now;
             _context.Entry(trigger).State = EntityState.Modified;
             try

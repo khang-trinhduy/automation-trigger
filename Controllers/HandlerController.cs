@@ -35,48 +35,125 @@ namespace Automation.API.Controllers
             {
                 //TODO call linq expression on trigger.cs
                 string expression = t.GetExpression();
+                object [] p = t.GetParams();
+                Type objType = Type.GetType("Crm." + t.Table);
                 if (t.Table.ToLower() == "contact")
                 {
-                    var contact = _crmContext.Contact.Where(expression).First();
-                    Type contactType = contact.GetType();
-                    if (contactType != null)
+                    foreach (var action in t.Actions)
                     {
-                        foreach (var action in t.Actions)
+                        var contacts = _crmContext.Contact.Where(expression, p).ToList();
+                        // Type contactType = contact.GetType();
+                        if (action.Type.ToLower() == "update")
                         {
-                            if (action.Type.ToLower() == "update")
+                            if (contacts != null)
                             {
-                                if (action.MetaData == null)
+                                foreach (var contact in contacts)
                                 {
-                                    continue;
-                                }
-                                switch (action.Type.ToLower())
-                                {
-                                    case "update":
-                                        foreach (var prop in contactType.GetProperties())
+                                    if (action.MetaData == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    string[] values = action.Value.Split("_");
+                                    string[] fields = action.MetaData.Field.Split("_");
+                                    if (values.Length != fields.Length)
+                                    {
+                                        throw new Exception(nameof(action));
+                                    }
+                                    int count = 0;
+                                    foreach (var field in fields)
+                                    {
+                                        foreach (var prop in contact.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
                                         {
-                                            if (prop.Name == action.MetaData.Field)
+                                            if (prop.Name.ToLower() == field.ToLower())
                                             {
-                                                FieldInfo fieldInfo = contactType.GetFieldInfo(prop.Name);
-                                                fieldInfo.SetValue(null, action.Value);
-                                                break;
+                                                // FieldInfo fieldInfo = contactType.GetFieldInfo(prop.Name);
+                                                // fieldInfo.SetValue(null, action.Value);
+                                                var propType = prop.PropertyType;
+                                                var targetType = propType.IsGenericType && propType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)) ? Nullable.GetUnderlyingType(propType) : propType;
+                                                try
+                                                {
+                                                    var new_val = Convert.ChangeType(values[count], targetType, null);
+                                                    prop.SetValue(contact, new_val);
+                                                    
+                                                }
+                                                catch (InvalidCastException e)
+                                                {
+                                                    throw new InvalidCastException(nameof(action.Value));
+                                                    
+                                                }
                                             }
                                             else
                                                 continue;
                                         }
-                                        break;
+                                        count++;
+
+                                    }
+
+                                    _crmContext.Entry(contact).State = EntityState.Modified;
+                                    
                                 }
-                                
-                            }
-                            else if(action.Type.ToLower() == "delete")
-                            {
-                                //TODO delete action
+
                             }
                         }
-                        //TODO do action depend on prop, val
+                        else if (action.Type.ToLower() == "delete")
+                        {
+                            if (contacts != null)
+                            {
+                                //TODO delete action
+                                foreach (var contact in contacts)
+                                {
+                                    _crmContext.Contact.Remove(contact);
+                                    
+                                }
+                            }
+                        }
+                        else if (action.Type.ToLower() == "create")
+                        {
+                            Contact template = new Contact();
+                            //TODO create action
+                            if (action.MetaData == null)
+                            {
+                                continue;
+                            }
+
+                            string[] values = action.Value.Split("_");
+                            string[] fields = action.MetaData.Field.Split("_");
+                            if (values.Length != fields.Length)
+                            {
+                                throw new Exception(nameof(action));
+                            }
+                            int count = 0;
+                            foreach (var field in fields)
+                            {
+                                foreach (var prop in template.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
+                                {
+                                    if (prop.Name == field)
+                                    {
+                                        // FieldInfo fieldInfo = contactType.GetFieldInfo(prop.Name);
+                                        // fieldInfo.SetValue(null, action.Value);
+                                        prop.SetValue(template, values[count]);
+                                    }
+                                    else
+                                        continue;
+                                }
+                                count++;
+
+                            }
+                            _crmContext.Contact.Add(template);
+                        }
                     }
+                    try
+                    {
+                        await _crmContext.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        throw;
+                    }
+                    //TODO do action depend on prop, val
                 }
             }
-            
             return Ok();
         }
 
@@ -86,16 +163,16 @@ namespace Automation.API.Controllers
             if (trusted)
             {
                 string conn = @"Server=" + sv + ";Database=" + db + ";Trusted_Connection=True;";
-                
+
             }
             else
             {
-                string conn = @"Server=" + sv + ";Database=" + db + ";User id=" + userId +";password=" + pwd;
+                string conn = @"Server=" + sv + ";Database=" + db + ";User id=" + userId + ";password=" + pwd;
             }
             return NotFound();
         }
 
-        
+
 
     }
 }

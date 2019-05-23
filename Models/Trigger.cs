@@ -15,7 +15,7 @@ namespace Automation.API.Models
         public DateTime LastUpdated { get; set; }
         public List<Action> Actions { get; set; }
         public List<Condition> All { get; set; }
-        public List<Condition> Any {get; set;}
+        public List<Condition> Any { get; set; }
 
         public string GetExpression()
         {
@@ -32,7 +32,7 @@ namespace Automation.API.Models
                 all.Add(c.GetLinqExpression(count));
                 count++;
             }
-            count = 0;
+            count = 1;
             //TODO append All linqexp to one condition
             foreach (var c in Any)
             {
@@ -40,16 +40,52 @@ namespace Automation.API.Models
                 any.Add(c.GetLinqExpression(count));
                 count++;
             }
-            string exp = "(" + String.Join("and", all) + ")";
+            string exp = "(" + String.Join(" and ", all) + ")";
             if (any != null && any.Count >= 1)
             {
-                exp += " or " + "(" + String.Join("or", any) + ")";
+                exp += " or " + "(" + String.Join("or ", any) + ")";
             }
             return exp;
             //TODO append Any linqexp to one condition
             //TODO merge All && Any into one linqexp
             //TODO return expression
         }
+        public object[] GetParams()
+        {
+            int length = All.Count + Any.Count;
+            object[] p = new object[length];
+            int count = 0;
+            for (int i = 0; i < All.Count; i++)
+            {
+                if (All[i].MetaData.Type == "int")
+                {
+                    p[i] = Convert.ToInt32(All[i].Threshold);
+                }
+                else if (All[i].MetaData.Type == "obj" && All[i].Threshold == "null")
+                {
+                    p[i] = null;
+                }
+                else
+                    p[i] = All[i].Threshold;
+                count++;
+            }
+            for (int i = 0; i < Any.Count; i++)
+            {
+                if (Any[i].MetaData.Type == "int")
+                {
+                    p[count] = Convert.ToInt32(Any[i].Threshold);
+                }
+                else if (Any[i].MetaData.Type == "obj" && Any[i].Threshold == "null")
+                {
+                    p[count] = null;
+                }
+                else
+                    p[count] = Any[i].Threshold;
+                count++;
+            }
+            return p;
+        }
+
         public void AddAction(Action action)
         {
             if (Actions == null)
@@ -64,15 +100,19 @@ namespace Automation.API.Models
             if (All == null)
             {
                 All = new List<Condition>();
-
+                All.Add(condition);
             }
-            foreach (var c in All)
+            else
             {
-                //NOTE condition on same table
-                if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+                foreach (var c in All)
                 {
-                    All.Add(condition);
-                }   
+                    //NOTE condition on same table
+                    if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+                    {
+                        All.Add(condition);
+                    }
+                }
+
             }
         }
         public void AddAny(Condition condition)
@@ -80,17 +120,21 @@ namespace Automation.API.Models
             if (Any == null)
             {
                 Any = new List<Condition>();
+                Any.Add(condition);
+            }
+            else
+            {
+                foreach (var c in Any)
+                {
+                    //NOTE condition on same table
+                    if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
+                    {
+                        Any.Add(condition);
+                    }
+                }
 
             }
-            foreach (var c in Any)
-            {
-                //NOTE condition on same table
-                if (condition.MetaData != null && condition.MetaData.Table == c.MetaData.Table)
-                {
-                    Any.Add(condition);
-                }   
-            }
         }
-        
+
     }
 }

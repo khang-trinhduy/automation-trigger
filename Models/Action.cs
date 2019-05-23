@@ -1,6 +1,6 @@
+using System;
 using System.Reflection;
 using System.Collections.Generic;
-using System;
 
 namespace Automation.API.Models
 {
@@ -10,12 +10,10 @@ namespace Automation.API.Models
         public MetaData MetaData { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }
-
         public void SetMeta(MetaData meta)
         {
             MetaData = meta;
         }
-
         public bool HaveValidType(string type, string value)
         {
             if (type == "int")
@@ -27,7 +25,6 @@ namespace Automation.API.Models
                 }
                 catch (System.Exception)
                 {
-
                     return false;
                 }
             }
@@ -37,11 +34,10 @@ namespace Automation.API.Models
             }
             return false;
         }
-
         public bool Execute()
         {
             Assembly asl = Assembly.GetExecutingAssembly();
-            Type [] assemblyTypes = asl.GetTypes();
+            Type[] assemblyTypes = asl.GetTypes();
             foreach (var t in assemblyTypes)
             {
                 if (t.Name == MetaData.Table)

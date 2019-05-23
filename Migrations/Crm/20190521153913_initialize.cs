@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Automation.API.Migrations.Crm
+namespace Automation.API.migrations.crm
 {
-    public partial class initialze : Migration
+    public partial class initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,7 @@ namespace Automation.API.Migrations.Crm
                     Name = table.Column<string>(nullable: true),
                     Age = table.Column<int>(nullable: false),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    CampaignId = table.Column<int>(nullable: false)
+                    CampaignId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -40,7 +40,7 @@ namespace Automation.API.Migrations.Crm
                         column: x => x.CampaignId,
                         principalTable: "Campaign",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
