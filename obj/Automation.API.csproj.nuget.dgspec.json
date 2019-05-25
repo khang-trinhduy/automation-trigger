@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\trinh\\source\\WTF\\API\\Automation.API\\Automation.API.csproj": {}
+    "C:\\Users\\trinh\\source\\WTF\\API\\Automation\\Automation.API\\Automation.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\trinh\\source\\WTF\\API\\Automation.API\\Automation.API.csproj": {
+    "C:\\Users\\trinh\\source\\WTF\\API\\Automation\\Automation.API\\Automation.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\trinh\\source\\WTF\\API\\Automation.API\\Automation.API.csproj",
+        "projectUniqueName": "C:\\Users\\trinh\\source\\WTF\\API\\Automation\\Automation.API\\Automation.API.csproj",
         "projectName": "Automation.API",
-        "projectPath": "C:\\Users\\trinh\\source\\WTF\\API\\Automation.API\\Automation.API.csproj",
+        "projectPath": "C:\\Users\\trinh\\source\\WTF\\API\\Automation\\Automation.API\\Automation.API.csproj",
         "packagesPath": "C:\\Users\\trinh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\trinh\\source\\WTF\\API\\Automation.API\\obj\\",
+        "outputPath": "C:\\Users\\trinh\\source\\WTF\\API\\Automation\\Automation.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

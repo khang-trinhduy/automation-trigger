@@ -8,53 +8,53 @@ namespace Automation.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class ContactsController : ControllerBase
+    public class CampaignsController : ControllerBase
     {
         private readonly CrmContext _context;
-        public ContactsController(CrmContext context)
+        public CampaignsController(CrmContext context)
         {
             _context = context;
         }
         [HttpGet]
-        public async Task<ActionResult<Contact>> Get()
+        public async Task<ActionResult<Campaign>> Get()
         {
-            var contacts = await _context.Contact.ToListAsync();
-            return Ok(contacts);
+            var campaigns = await _context.Campaign.ToListAsync();
+            return Ok(campaigns);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<ActionResult<Contact>> GetContact(int id)
+        public async Task<ActionResult<Campaign>> GetCampaign(int id)
         {
-            var contact =await _context.Contact.FindAsync(id);
-            if (contact == null)
+            var campaign =await _context.Campaign.FindAsync(id);
+            if (campaign == null)
             {
                 return NotFound();
             }
-            return Ok(contact);
+            return Ok(campaign);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Contact>> CreateContact([FromBody] Contact c)
+        public async Task<ActionResult<Campaign>> CreateCampaign([FromBody] Campaign c)
         {
             if (c == null)
             {
                 return NotFound();
             }
-            _context.Contact.Add(c);
+            _context.Campaign.Add(c);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetContact", new {id = c.Id}, c);
+            return CreatedAtAction("GetCampaign", new {id = c.Id}, c);
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<ActionResult<Contact>> UpdateContact(int id, [FromBody] Contact contact)
+        public async Task<ActionResult<Campaign>> UpdateCampaign(int id, [FromBody] Campaign campaign)
         {
-            if (contact == null || id != contact.Id)
+            if (campaign == null || id != campaign.Id)
             {
                 return BadRequest();
             }
-            _context.Entry(contact).State = EntityState.Modified;
+            _context.Entry(campaign).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -68,15 +68,15 @@ namespace Automation.API.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
-        public async Task<ActionResult<Contact>> DeleteContact(int id)
+        public async Task<ActionResult<Campaign>> DeleteCampaign(int id)
         {
-            var contact = await _context.Contact.FindAsync(id);
-            if(contact == null)
+            var campaign = await _context.Campaign.FindAsync(id);
+            if(campaign == null)
             {
                 return  NotFound();
             }
 
-            _context.Contact.Remove(contact);
+            _context.Campaign.Remove(campaign);
             try
             {
                 await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace Automation.API.Controllers
                 
                 throw;
             }
-            return contact;
+            return campaign;
         }
     }
 }

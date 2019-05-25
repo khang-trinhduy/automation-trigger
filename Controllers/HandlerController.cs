@@ -79,7 +79,7 @@ namespace Automation.API.Controllers
                                                 }
                                                 catch (InvalidCastException e)
                                                 {
-                                                    throw new InvalidCastException(nameof(action.Value));
+                                                    throw new InvalidCastException(e.Message);
                                                     
                                                 }
                                             }

@@ -160,8 +160,15 @@ namespace Automation.API.Controllers
             }
 
             _context.Remove(trigger);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                
+                throw;
+            }
             return trigger;
         }
     }
