@@ -105,7 +105,6 @@ namespace Automation.API.Controllers
         {
             _context.Action.Add(action);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetAction", new { id = action.Id }, action);
         }
 
