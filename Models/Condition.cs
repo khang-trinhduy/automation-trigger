@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
 using Crm;
@@ -14,7 +15,6 @@ namespace Automation.API.Models
         public string Threshold { get; set; }
         public string Type { get; set; }
         public MetaData MetaData { get; set; }
-
         public void SetMeta(MetaData meta)
         {
             MetaData = meta;

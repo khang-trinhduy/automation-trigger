@@ -20,19 +20,37 @@ namespace Automation.API.Controllers
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Trigger>>> Get() {
-            return await _context.Trigger.ToListAsync();
+            var triggers = await _context.Trigger.Include(t => t.Actions)
+                .Include(t => t.All)
+                .Include(t => t.Any)
+                .ToListAsync();
+            foreach (var t in triggers)
+            {
+                foreach (var item in t.Actions)
+                {
+                    item.Trigger = null;
+                }
+            }
+            return triggers;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Trigger>> GetTrigger(int id)
         {
-            var trigger = await _context.Trigger.FindAsync(id);
+            var triggers = await _context.Trigger.Include(t => t.Actions)
+                .Include(t => t.All)
+                .Include(t => t.Any)
+                .ToListAsync();
+            var trigger = triggers.Find(t => t.Id == id);       
             if (trigger == null)
             {
                 return NotFound();
             }
-
+            foreach (var item in trigger.Actions)
+            {
+                item.Trigger = null;
+            }
             return Ok(trigger);
         }
 

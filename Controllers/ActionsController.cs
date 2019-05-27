@@ -22,9 +22,23 @@ namespace Automation.API.Controllers
 
         // GET: api/Actions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Action>>> GetAction()
+        public async Task<ActionResult<IEnumerable<Models.Action>>> GetAction([FromQuery] bool available = false)
         {
-            return await _context.Action.ToListAsync();
+            var actions = await _context.Action.Include(a => a.Trigger).ToListAsync();
+            if (available)
+            {
+                var result = actions.Where(a => (a == null || a.Trigger.IsNotActive)).ToList();
+                foreach (var item in result)
+                {
+                    item.Trigger = null;
+                }
+                return result;
+            }
+            foreach (var item in actions)
+            {
+                item.Trigger = null;
+            } 
+            return actions.ToList();
         }
 
         // GET: api/Actions/5

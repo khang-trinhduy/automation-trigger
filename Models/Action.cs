@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Automation.API.Models
 {
@@ -10,6 +11,9 @@ namespace Automation.API.Models
         public MetaData MetaData { get; set; }
         public string Type { get; set; }
         public string Value { get; set; }
+        public int? TriggerId {get; set;}
+        [ForeignKey("TriggerId")]
+        public Trigger Trigger { get; set; }
         public void SetMeta(MetaData meta)
         {
             MetaData = meta;
