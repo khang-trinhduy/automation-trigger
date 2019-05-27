@@ -94,7 +94,7 @@ namespace Automation.API.Controllers
                 return BadRequest();
             }
 
-            var tmpMeta = await _context.MetaData.FirstOrDefaultAsync(e => e.Field == meta.Field && e.Type == meta.Type);
+            var tmpMeta = await _context.MetaData.FirstOrDefaultAsync(e => e.Field == meta.Field && e.Type == meta.Type && e.Table == meta.Table);
             if (tmpMeta == null)
             {
                 return BadRequest();
