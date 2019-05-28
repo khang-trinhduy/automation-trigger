@@ -40,12 +40,13 @@ namespace Automation.API.Controllers
             } 
             return actions.ToList();
         }
-
+        
         // GET: api/Actions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Models.Action>> GetAction(int id)
         {
-            var action = await _context.Action.FindAsync(id);
+            var actions = _context.Action.Include(a => a.MetaData);
+            var action = actions.FirstOrDefault(a => a.Id ==id);
 
             if (action == null)
             {
@@ -54,7 +55,7 @@ namespace Automation.API.Controllers
 
             return action;
         }
-
+        
         // PUT: api/Actions/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAction(int id, Models.Action action)

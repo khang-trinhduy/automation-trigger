@@ -38,9 +38,9 @@ namespace Automation.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Trigger>> GetTrigger(int id)
         {
-            var triggers = await _context.Trigger.Include(t => t.Actions)
-                .Include(t => t.All)
-                .Include(t => t.Any)
+            var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(c => c.MetaData)
+                .Include(t => t.All).ThenInclude(c => c.MetaData)
+                .Include(t => t.Any).ThenInclude(c => c.MetaData)
                 .ToListAsync();
             var trigger = triggers.Find(t => t.Id == id);       
             if (trigger == null)

@@ -25,7 +25,8 @@ namespace Automation.API.Controllers
         [HttpGet]
         [Route("{id:int}")]
         public async Task<ActionResult<Condition>> Get(int id) {
-            var condition = await _context.Condition.FindAsync(id);
+            var conditions = _context.Condition.Include(c => c.MetaData);
+            var condition = await conditions.FirstOrDefaultAsync(c => c.Id == id);
             if (condition is null) {
                 return NotFound();
             }
