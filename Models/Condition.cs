@@ -31,6 +31,8 @@ namespace Automation.API.Models
                     return SqlOperator.LESS;
                 case "greaterequal":
                     return SqlOperator.GREATEREQUAL;
+                case "lessequal":
+                    return SqlOperator.LESSEQUAL;
                 case "like":
                     return SqlOperator.LIKE;
                 case "dif":
