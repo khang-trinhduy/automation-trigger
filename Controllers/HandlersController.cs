@@ -160,6 +160,120 @@ namespace Automation.API.Controllers
                 }
                 //TODO do action depend on prop, val
             }
+            else if (t.Table.ToLower() == "campaign")
+            {
+                foreach (var action in t.Actions)
+                {
+                    var campaigns = _crmContext.Campaign.Where(expression, p).ToList();
+                    // Type campaignType = campaign.GetType();
+                    if (action.Type.ToLower() == "update")
+                    {
+                        if (campaigns != null)
+                        {
+                            foreach (var campaign in campaigns)
+                            {
+                                if (action.MetaData == null)
+                                {
+                                    continue;
+                                }
+
+                                string[] values = action.Value.Split("_");
+                                string[] fields = action.MetaData.Field.Split("_");
+                                if (values.Length != fields.Length)
+                                {
+                                    throw new Exception(nameof(action));
+                                }
+                                int count = 0;
+                                foreach (var field in fields)
+                                {
+                                    foreach (var prop in campaign.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
+                                    {
+                                        if (prop.Name.ToLower() == field.ToLower())
+                                        {
+                                            // FieldInfo fieldInfo = campaignType.GetFieldInfo(prop.Name);
+                                            // fieldInfo.SetValue(null, action.Value);
+                                            var propType = prop.PropertyType;
+                                            var targetType = propType.IsGenericType && propType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)) ? Nullable.GetUnderlyingType(propType) : propType;
+                                            try
+                                            {
+                                                var new_val = Convert.ChangeType(values[count], targetType, null);
+                                                prop.SetValue(campaign, new_val);
+
+                                            }
+                                            catch (InvalidCastException e)
+                                            {
+                                                throw new InvalidCastException(e.Message);
+
+                                            }
+                                        }
+                                        else
+                                            continue;
+                                    }
+                                    count++;
+
+                                }
+
+                                _crmContext.Entry(campaign).State = EntityState.Modified;
+
+                            }
+
+                        }
+                    }
+                    else if (action.Type.ToLower() == "delete")
+                    {
+                        if (campaigns != null)
+                        {
+                            //TODO delete action
+                            foreach (var campaign in campaigns)
+                            {
+                                _crmContext.Campaign.Remove(campaign);
+
+                            }
+                        }
+                    }
+                    else if (action.Type.ToLower() == "create")
+                    {
+                        Campaign template = new Campaign();
+                        //TODO create action
+                        if (action.MetaData == null)
+                        {
+                            continue;
+                        }
+
+                        string[] values = action.Value.Split("_");
+                        string[] fields = action.MetaData.Field.Split("_");
+                        if (values.Length != fields.Length)
+                        {
+                            throw new Exception(nameof(action));
+                        }
+                        int count = 0;
+                        foreach (var field in fields)
+                        {
+                            foreach (var prop in template.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
+                            {
+                                if (prop.Name == field)
+                                {
+                                    prop.SetValue(template, values[count]);
+                                }
+                                else
+                                    continue;
+                            }
+                            count++;
+
+                        }
+                        _crmContext.Campaign.Add(template);
+                    }
+                }
+                try
+                {
+                    await _crmContext.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+                //TODO do action depend on prop, val
+            }
         }
 
         [HttpGet("validate")]
