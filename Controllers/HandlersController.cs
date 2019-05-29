@@ -38,6 +38,26 @@ namespace Automation.API.Controllers
             }
             return Ok("Executed " + sortedTriggers.Count.ToString() + " trigger");
         }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Handler>> Execute(int id)
+        {
+            var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
+                    .Include(t => t.All).ThenInclude(c => c.MetaData)
+                    .Include(t => t.Any).ThenInclude(c => c.MetaData).ToListAsync();
+            var trigger = triggers.FirstOrDefault(t => t.Id == id);
+            if (trigger.IsNotActive)
+            {
+                return BadRequest("trigger is not active");
+            }
+            if (trigger == null)
+            {
+                return NotFound();
+            }
+
+            await ExecuteTrigger(trigger);
+
+            return Ok($"Executed trigger {trigger.Title}");
+        }
 
         private async Task ExecuteTrigger(Trigger t)
         {
