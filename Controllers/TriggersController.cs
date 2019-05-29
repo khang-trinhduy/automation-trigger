@@ -97,13 +97,42 @@ namespace Automation.API.Controllers
                 return BadRequest();
             }
 
-            var tmpAction = await _context.Action.FirstOrDefaultAsync(e => e.Type == action.Type && e.Value == action.Value);
+            var tmpAction = await _context.Action.FirstOrDefaultAsync(e => e.Id == action.Id && e.Type == action.Type && e.Value == action.Value);
             if (tmpAction == null)
             {
                 return BadRequest();
             }
 
             trigger.AddAction(tmpAction);
+            trigger.LastUpdated = DateTime.Now;
+            _context.Entry(trigger).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            return NoContent();
+
+        }
+        [HttpPut("unsetaction/{id}")]
+        public async Task<ActionResult<Trigger>> UnSetAction(int id, Models.Action action)
+        {
+            var trigger = await _context.Trigger.FindAsync(id);
+            if (trigger == null)
+            {
+                return BadRequest();
+            }
+
+            var tmpAction = await _context.Action.FirstOrDefaultAsync(e => e.Id == action.Id && e.Type == action.Type && e.Value == action.Value);
+            if (tmpAction == null)
+            {
+                return BadRequest();
+            }
+
+            trigger.RemoveAction(tmpAction);
             trigger.LastUpdated = DateTime.Now;
             _context.Entry(trigger).State = EntityState.Modified;
             try
@@ -142,6 +171,36 @@ namespace Automation.API.Controllers
             {
                 trigger.AddAny(tmpCondition);
             }
+            trigger.LastUpdated = DateTime.Now;
+            _context.Entry(trigger).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+            return NoContent();
+
+        }
+        [HttpPut("unsetcondition/{id}")]
+        public async Task<ActionResult<Trigger>> UnSetCondition(int id, Condition condition, [FromQuery] bool all = true)
+        {
+            var trigger = await _context.Trigger.FindAsync(id);
+            if (trigger == null)
+            {
+                return BadRequest();
+            }
+
+            var tmpCondition = await _context.Condition.FirstOrDefaultAsync(e => e.Id == condition.Id && e.Type == condition.Type && e.Operator == condition.Operator && e.Threshold == condition.Threshold);
+            if (tmpCondition == null)
+            {
+                return BadRequest();
+            }
+
+            // trigger.AddCondition(tmpCondition);
+            trigger.RemoveCondition(tmpCondition, all);
             trigger.LastUpdated = DateTime.Now;
             _context.Entry(trigger).State = EntityState.Modified;
             try

@@ -15,28 +15,16 @@ namespace Automation.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class HandlerController : ControllerBase
+    public class HandlersController : ControllerBase
     {
         private readonly AutoContext _context;
         private CrmContext _crmContext;
-        public HandlerController(AutoContext context, CrmContext crmContext)
+        public HandlersController(AutoContext context, CrmContext crmContext)
         {
             _context = context;
             _crmContext = crmContext;
         }
-        [HttpPost]
-        public async Task<ActionResult<Handler>> Execute(Trigger trigger)
-        {
-            try {
-                await ExecuteTrigger(trigger);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok();
-        } 
-        [HttpPost]
+        [HttpGet]
         public async Task<ActionResult<Handler>> Execute()
         {
             var triggers = await _context.Trigger.Include(t => t.Actions).ThenInclude(a => a.MetaData)
@@ -48,7 +36,7 @@ namespace Automation.API.Controllers
                 //TODO call linq expression on trigger.cs
                 await ExecuteTrigger(t);
             }
-            return Ok();
+            return Ok("Executed " + sortedTriggers.Count.ToString() + " trigger");
         }
 
         private async Task ExecuteTrigger(Trigger t)

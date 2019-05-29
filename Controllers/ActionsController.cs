@@ -27,7 +27,7 @@ namespace Automation.API.Controllers
             var actions = await _context.Action.Include(a => a.Trigger).ToListAsync();
             if (available)
             {
-                var result = actions.Where(a => (a == null || a.Trigger.IsNotActive)).ToList();
+                var result = actions.Where(a => (a != null || a.Trigger.IsNotActive)).ToList();
                 foreach (var item in result)
                 {
                     item.Trigger = null;

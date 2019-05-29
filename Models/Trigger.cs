@@ -43,7 +43,7 @@ namespace Automation.API.Models
             string exp = "(" + String.Join(" and ", all) + ")";
             if (any != null && any.Count >= 1)
             {
-                exp += " or " + "(" + String.Join("or ", any) + ")";
+                exp += " or " + "(" + String.Join(" or ", any) + ")";
             }
             return exp;
             //TODO append Any linqexp to one condition
@@ -95,6 +95,13 @@ namespace Automation.API.Models
             }
             Actions.Add(action);
         }
+        public void RemoveAction(Action action)
+        {
+            if (Actions != null)
+            {
+                Actions.Remove(action);
+            }
+        }
         public void AddAll(Condition condition)
         {
             if (All == null)
@@ -133,6 +140,26 @@ namespace Automation.API.Models
                     }
                 }
 
+            }
+        }
+        public void RemoveCondition(Condition condition, bool isAll)
+        {
+            if (condition != null)
+            {
+                if (isAll)
+                {
+                    if (All != null)
+                    {
+                        All.Remove(condition);
+                    }
+                }
+                else
+                {
+                    if (Any != null)
+                    {
+                        Any.Remove(condition);
+                    }
+                }
             }
         }
 
